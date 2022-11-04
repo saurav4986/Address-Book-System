@@ -4,12 +4,26 @@ public class Contacts {
     private String firstName;
     private String lastName;
     private String email;
-    private String phoneNumber;
-    private String zip;
+    private long phoneNumber;
+    private int zip;
     private String city;
     private String state;
     private String address;
 
+    public Contacts(String firstName, String lastName, String email, long phoneNumber,
+                    int zip, String city, String state, String address) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.zip = zip;
+        this.city = city;
+        this.state = state;
+        this.address = address;
+    }
+    public Contacts() {
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -34,19 +48,19 @@ public class Contacts {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getZip() {
+    public int getZip() {
         return zip;
     }
 
-    public void setZip(String zip) {
+    public void setZip(int zip) {
         this.zip = zip;
     }
 
@@ -80,12 +94,11 @@ public class Contacts {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", zip='" + zip + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", zip=" + zip +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", address='" + address + '\'' +
                 '}';
     }
-
 }
