@@ -12,7 +12,7 @@ public class Contacts {
 
     public Contacts(String firstName, String lastName, String email, long phoneNumber,
                     int zip, String city, String state, String address) {
-        super();
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
