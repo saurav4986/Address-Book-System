@@ -21,7 +21,7 @@ public class AddressBookMain {
         while (stopper) {
             System.out.println("Please select any number from the below Main Menu");
             System.out.println(
-                    "1. Add AddressBook \n2. View AddressBook \n3. View the Person in the City or State \n4. View the Person by City or State \n5. Count by City or State \n6. Exit from the Address Book program");
+                    "1. Add AddressBook \n2. View AddressBook \n3. View the Person in the City or State \n4. View the Person by City or State \n5. Count by City or State \n6. Sort by name,city, state or zip \n7. Exit from the Address Book program");
             int selection = sc.nextInt();
             switch (selection) {
                 case 1: {
@@ -182,7 +182,70 @@ public class AddressBookMain {
                         System.out.println("Incorrect selection. Please select City or State");
 
                     break;
-                case 6: {
+                case 6:
+                    System.out.print(" Enter option to sort by name,city, state or zip: ");
+                    String searchChoice1 = sc.next();
+
+                    if (searchChoice1.equalsIgnoreCase("Name")) {
+
+                        for (Map.Entry<String, AddressBook> pair : mapAddressBook.entrySet()) {
+
+                            System.out.println("Sorting entries for AddressBook '" + pair.getKey() + "' by Name:" + "\n");
+
+                            pair.getValue().contactsList.stream().sorted((contact1, contact2) ->
+
+                                    contact1.getFirstName().compareToIgnoreCase(contact2.getFirstName())
+
+                            ).forEach(contact -> System.out.println(contact));
+
+                        }
+
+                    } else if (searchChoice1.equalsIgnoreCase("City")) {
+
+                        for (Map.Entry<String, AddressBook> pair : mapAddressBook.entrySet()) {
+
+                            System.out.println("Sorting entries for AddressBook '" + pair.getKey() + "' by City:" + "\n");
+
+                            pair.getValue().contactsList.stream().sorted((contact1, contact2) ->
+
+                                    contact1.getCity().compareToIgnoreCase(contact2.getCity())
+
+                            ).forEach(contact -> System.out.println(contact));
+
+                        }
+
+                    } else if (searchChoice1.equalsIgnoreCase("State")) {
+
+                        for (Map.Entry<String, AddressBook> pair : mapAddressBook.entrySet()) {
+
+                            System.out.println("Sorting entries for AddressBook '" + pair.getKey() + "' by State:" + "\n");
+
+                            pair.getValue().contactsList.stream().sorted((contact1, contact2) ->
+
+                                    contact1.getState().compareToIgnoreCase(contact2.getState())
+
+                            ).forEach(contact -> System.out.println(contact));
+
+                        }
+
+                    } else if (searchChoice1.equalsIgnoreCase("Zip")) {
+
+                        for (Map.Entry<String, AddressBook> pair : mapAddressBook.entrySet()) {
+
+                            System.out.println("Sorting entries for AddressBook '" + pair.getKey() + "' by Zip:" + "\n");
+
+                            pair.getValue().contactsList.stream().sorted(
+                                            (i1, i2) -> (i1.getZip() < i2.getZip()) ? -1 : (i1.getZip() > i2.getZip()) ? 1 : 0)
+                                    .forEach(contact -> System.out.println(contact));
+
+                        }
+
+                    } else {
+                        System.out.println("Incorrect selection. Please select Name,City,State or Zip");
+                    }
+
+                    break;
+                case 7: {
                     System.out.println("Thank you for using Address Book");
                     sc.close();
                     System.exit(selection);
