@@ -1,143 +1,198 @@
 package com.bridgelabz.AddressBookSystem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class AddressBookMain {
-    static List<Contacts> a1 = new ArrayList<>();
-    static Scanner scanner = new Scanner(System.in);
+
+    static HashMap<String, AddressBook> mapAddressBook = new HashMap<String, AddressBook>();
+    static Scanner sc = new Scanner(System.in);
     static {
         System.out.println("Welcome to Address Book Program");
     }
+
     public static void main(String[] args) {
-        // UC5: Adding Multiple Contacts with the User Input
+        AddressBook addressBookObj = new AddressBook();
+        // UC6: Adding Multiple AddressBook of contacts
         boolean stopper = true;
         while (stopper) {
-            System.out.println("""
-                    Please enter any number to select\s
-                     1. Add Contact\s
-                     2. Edit Contact\s
-                     3. Delete Contact\s
-                     4. Display Contact\s
-                     5. Exit from the program""");
-            int selectOption = scanner.nextInt();
-            System.out.println("Input checker: " + selectOption);
-            switch (selectOption) {
+            System.out.println("Please select any number from the below Main Menu");
+            System.out.println(
+                    "1. Add AddressBook \n2. View AddressBook \n3. View the Person in the City or State \n4. View the Person by City or State \n5. Count by City or State \n6. Exit from the Address Book program");
+            int selection = sc.nextInt();
+            switch (selection) {
                 case 1: {
-                    // Adding new contacts to address book
-                    System.out.println("Enter the number of contacts you would like to enter?");
-                    int numberOfContacts = scanner.nextInt();
-                    addingContacts(numberOfContacts);
-                    System.out.println("All the contacts are added successfully!");
-                    System.out.println("----------------------------------------------------------");
-                    break;
-
+                    System.out.println("Please enter the Name of the AddressBook");
+                    String addressBookName = sc.next();
+                    System.out.println(addressBookName);
+                    mapAddressBook.put(addressBookName, addressBookObj);
+                    for (Map.Entry<String, AddressBook> m : mapAddressBook.entrySet()) {
+                        System.out.println(m.getKey() + " is Address book Elements are " + m.getValue().contactsList);
+                    }
+                    addressBookObj.Contactlist(addressBookName, addressBookObj);
                 }
+                break;
                 case 2: {
-                    // UC3: Editing the contacts which you have added
-                    System.out.println("Please enter the first name of the added contact to edit: ");
-                    String firstNameToEdit = scanner.next();
-                    editContacts(firstNameToEdit);
-                    System.out.println("----------------------------------------------------------");
-                    break;
+                    for (Entry<String, AddressBook> m : mapAddressBook.entrySet()) {
+                        System.out.println(m.getKey() + " Elements are" + m.getValue().contactsList);
+                    }
                 }
+                break;
                 case 3: {
-                    // UC4: Deleting the Record with the First name
-                    System.out.println("Please enter the first name of the added contact to Delete: ");
-                    String firstNameToEdit1 = scanner.next();
-                    deleteContacts(firstNameToEdit1);
-                    System.out.println("----------------------------------------------------------");
-                    break;
+                    /* Ability to search Person in a City or State across the multipleAddressBook */
+                    System.out.println("Please enter the Name of the City or State from AddressBook");
+                    String name = sc.next();
 
+                    mapAddressBook.values().stream().forEach((i1) -> {
+                        i1.contactsList.stream()
+                                .filter(i2 -> i2.getCity().equalsIgnoreCase(name) || i2.getState().equalsIgnoreCase(name))
+                                .forEach(System.out::println);
+                    });
+
+                    // Without Stream
+                    /*
+                     *
+                     * for (Entry<String, AddressBook> m : mapAddressBook.entrySet()) {
+                     * System.out.println(m.getKey() + " Elements are" + m.getValue().contactsList);
+                     * for (Contacts contacts : m.getValue().contactsList) {
+                     * System.out.println("Checking contacts"); if
+                     * (contacts.getCity().equalsIgnoreCase(name)) {
+                     * System.out.println("Retrieved the city from contact list is: " +
+                     * contacts.getCity()); System.out.println(contacts); } } }
+                     */
                 }
+                break;
                 case 4: {
-                    // Displaying added contacts
-                    if (a1.isEmpty()) {
-                        System.out.println("No contacts are added in the Address Book! \n "
-                                + "please enter the the contacts in the Address Book");
+                    /* Ability to view Persons by City or State - Maintain Dictionary of City and */
 
+                    System.out.println("Enter option to view by city or state: ");
+                    String searchChoice = sc.next();
+
+                    if (searchChoice.equalsIgnoreCase("City")) {
+
+                        System.out.print(" Enter city : ");
+                        String city = sc.next();
+
+                        mapAddressBook.values().stream().forEach((addressBook) -> {
+
+                                    addressBook.cityPersonMap.entrySet().stream().filter((searchCity) ->
+
+                                            searchCity.getKey().equalsIgnoreCase(city)
+
+                                    ).forEach((filteredCity) -> System.out.println(filteredCity));
+
+                                }
+
+                        );
+
+                    } else if (searchChoice.equalsIgnoreCase("State")) {
+
+                        System.out.print(" Enter state : ");
+                        String state = sc.next();
+
+                        mapAddressBook.values().stream().forEach((addressBook) -> {
+
+                                    addressBook.statePersonMap.entrySet().stream().filter((searchState) ->
+
+                                            searchState.getKey().equalsIgnoreCase(state)
+
+                                    ).forEach((filteredState) -> System.out.println(filteredState));
+
+                                }
+
+                        );
+
+                    } else {
+                        System.out.println("Incorrect selection. Please select City or State");
                     }
-                    else {
-                        for (Object object : a1) {
-                            System.out.println("Below are your added contact:");
-                            System.out.println(object);
+
+                }
+                /* Ability to view Persons by City or State - Maintain Dictionary of City and */
+                /*
+                 * System.out.println("Persons According to Name and City: ");
+                 *
+                 * mapAddressBook.values().stream().forEach(i1 -> { i1.contactsList.stream()
+                 * .forEach(i2 -> System.out.println("Name: " + i2.getFirstName() + " City: " +
+                 * i2.getCity())); });
+                 *
+                 * System.out.println("Persons According to Name and State: ");
+                 * mapAddressBook.values().stream().forEach(i1 -> {
+                 * i1.contactsList.stream().forEach( i2 -> System.out.println("Name: " +
+                 * i2.getFirstName() + " State: " + i2.getState())); });
+                 *
+                 * /* Ability to get number of contact persons i.e. count by City or State
+                 */
+
+                /*
+                 * System.out.println("Ent"); mapAddressBook.values().stream().forEach(i1 -> {
+                 * i1.contactsList.stream() .forEach(i2 -> System.out.println("Name: " +
+                 * i2.getFirstName() + " City: " + i2.getCity())); });
+                 *
+                 * }
+                 */
+
+                break;
+
+                case 5:
+                    System.out.print(" Enter option to count by city or state: ");
+                    String searchChoice = sc.next();
+
+                    if (searchChoice.equalsIgnoreCase("City")) {
+
+                        System.out.print(" Enter city : ");
+                        String city = sc.next();
+
+                        int cityCount = 0;
+
+                        for (AddressBook addBook : mapAddressBook.values()) {
+
+                            cityCount += addBook.contactsList.stream().filter((contact) ->
+
+                                    contact.getCity().equalsIgnoreCase(city)
+
+                            ).count();
+
                         }
-                    }
-                    System.out.println("----------------------------------------------------------");
+
+                        System.out.println(" Total count: " + cityCount);
+
+                    } else if (searchChoice.equalsIgnoreCase("State")) {
+
+                        System.out.print(" Enter state : ");
+                        String state = sc.next();
+
+                        int stateCount = 0;
+
+                        for (AddressBook addBook : mapAddressBook.values()) {
+
+                            stateCount += addBook.contactsList.stream().filter((contact) ->
+
+                                    contact.getState().equalsIgnoreCase(state)
+
+                            ).count();
+
+                        }
+
+                        System.out.println(" Total count: " + stateCount);
+
+                    } else
+                        System.out.println("Incorrect selection. Please select City or State");
+
                     break;
+                case 6: {
+                    System.out.println("Thank you for using Address Book");
+                    sc.close();
+                    System.exit(selection);
                 }
-                case 5: {
-                    stopper = false;
-                    System.out.println("Thank you for using Address Book Program!");
-                    System.exit(selectOption);
-                }
-
                 default:
-                    System.out.println("Thank you for using Address Book Program!");
                     stopper = false;
-                    throw new IllegalArgumentException("Unexpected value: " + selectOption);
+                    throw new IllegalArgumentException("Unexpected value: " + selection);
             }
         }
-        scanner.close();
-    }
 
-    private static void addingContacts(int numberOfContacts) {
-        for (int i = 1; i <= numberOfContacts; i++) {
-            Contacts contactObj = new Contacts();
-            System.out.println("Please enter the first name: ");
-            contactObj.setFirstName(scanner.next());
-            System.out.println("Please enter the last name: ");
-            contactObj.setLastName(scanner.next());
-            System.out.println("Please enter the Address: ");
-            contactObj.setAddress(scanner.next());
-            System.out.println("Please enter the city: ");
-            contactObj.setCity(scanner.next());
-            System.out.println("Please enter the state: ");
-            contactObj.setState(scanner.next());
-            System.out.println("Please enter the zip: ");
-            contactObj.setZip(scanner.nextInt());
-            System.out.println("Please enter the Phone Number: ");
-            contactObj.setPhoneNumber(scanner.nextLong());
-            System.out.println("Please enter the email: ");
-            contactObj.setEmail(scanner.next());
-            // adding the contact in the array list
-            a1.add(contactObj);
-            System.out.println(i + " contact are added successfully!");
-        }
-
-    }
-    // I/P:First Name
-    // O/P: editing all the details of the contact
-
-    private static void editContacts(String firstNameToEdit) {
-        boolean isContactFound = true;
-        for (Contacts object : a1) {
-            if (firstNameToEdit.equals(object.getFirstName())) {
-                System.out.println("Lets edit the contacts: ");
-                object.editingContact();
-                isContactFound = false;
-                break;
-            }
-        }
-        if (isContactFound) {
-            System.out.println("Sorry there is no contact with this first name");
-        }
-
-    }
-    private static void deleteContacts(String firstNameToEdit1) {
-        boolean isContactFound = true;
-        for (Contacts object : a1) {
-            if (firstNameToEdit1.equals(object.getFirstName())) {
-                a1.remove(object);
-                System.out.println("Contact is deleted successfully!");
-                isContactFound = false;
-                break;
-            }
-        }
-        if (isContactFound) {
-            System.out.println("Sorry there is no contact with this First Name");
-        }
     }
 
 }
