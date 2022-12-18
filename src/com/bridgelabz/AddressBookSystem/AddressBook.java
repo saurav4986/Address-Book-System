@@ -1,6 +1,7 @@
 package com.bridgelabz.AddressBookSystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +9,11 @@ import java.util.Scanner;
 public class AddressBook {
     static Scanner scanner = new Scanner(System.in);
     List<Contacts> contactsList = new ArrayList<Contacts>();
+
+    List<Contacts> contactsCityList = new ArrayList<>();
+    List<Contacts> contactsStateList = new ArrayList<>();
+    HashMap<String, List<Contacts>> cityPersonMap = new HashMap<>();
+    HashMap<String, List<Contacts>> statePersonMap = new HashMap<>();
 
     public void Contactlist(String addressBookName, AddressBook abk) {
         // UC5: Adding Multiple Contacts with the User Input
@@ -74,7 +80,6 @@ public class AddressBook {
                     stopper = false;
                     AddressBookMain.main(null);
                     System.out.println("Thank you for using Address Book Program!");
-                    // System.exit(selectOption);
                 }
 
                 default:
@@ -98,7 +103,8 @@ public class AddressBook {
                 while (flag) {
                     System.out.println("Please enter the first name: ");
                     String firstName = scanner.next();
-                    if (!checker(firstName)) {// if return true which means the contact with the first name is NOT in the
+                    if (!checker(firstName)) {// if return true which means the contact with the first name is NOT in
+                        // the
                         // list
                         p1.setFirstName(firstName);
                         flag = false;
@@ -109,9 +115,11 @@ public class AddressBook {
                 System.out.println("Please enter the Address: ");
                 p1.setAddress(scanner.next());
                 System.out.println("Please enter the city: ");
-                p1.setCity(scanner.next());
+                String city = scanner.next();
+                p1.setCity(city);
                 System.out.println("Please enter the state: ");
-                p1.setState(scanner.next());
+                String state = scanner.next();
+                p1.setState(state);
                 System.out.println("Please enter the zip: ");
                 p1.setZip(scanner.nextInt());
                 System.out.println("Please enter the Phone Number: ");
@@ -119,6 +127,7 @@ public class AddressBook {
                 System.out.println("Please enter the email: ");
                 p1.setEmail(scanner.next());
                 contactsList.add(p1);
+                contactListOfMapAndState(cityPersonMap, city, statePersonMap, state, p1);
 
             } catch (InputMismatchException e) {
                 System.out.println(e);
@@ -131,18 +140,40 @@ public class AddressBook {
 
     }
 
+    public void contactListOfMapAndState(HashMap<String, List<Contacts>> mapOfCity, String city,
+                                         HashMap<String, List<Contacts>> mapOfState, String state, Contacts p1) {
+        if (cityPersonMap.containsKey(city)) {
+            contactsCityList = cityPersonMap.get(city);
+            cityPersonMap.put(city, contactsCityList);
+        } else {
+            List<Contacts> contactsCityList = new ArrayList<>();
+            contactsCityList.add(p1);
+            cityPersonMap.put(city, contactsCityList);
+        }
+        if (cityPersonMap.containsKey(state)) {
+            contactsStateList = statePersonMap.get(state);
+            statePersonMap.put(state, contactsStateList);
+        } else {
+            List<Contacts> contactsStateList = new ArrayList<>();
+            contactsStateList.add(p1);
+            statePersonMap.put(state, contactsStateList);
+        }
+
+    }
+
     //returns false if the first name is already in the contact list
     private boolean checker(String firstName) {
-        boolean res=contactsList.stream().anyMatch(i1->i1.getFirstName().equals(firstName));
+        boolean res = contactsList.stream().anyMatch(i1 -> i1.getFirstName().equals(firstName));
         return res;
-	/*	for (Contacts obj : contactsList) {
-			// if (firstName.equals(obj.getFirstName())) {
-			if (firstName.equalsIgnoreCase(obj.getFirstName())) {
-				System.out.println("Sorry! Duplicate first Name is not allowed.");
-				return false;
-			}
-		}
-		return true;*/
+        /*
+         * for (Contacts obj : contactsList) { // if
+         * (firstName.equals(obj.getFirstName())) { if
+         * (firstName.equalsIgnoreCase(obj.getFirstName())) {
+         * System.out.println("Sorry! Duplicate first Name is not allowed."); return
+         * false; } }
+         *
+         * return true;
+         */
     }
 
     // I/P:First Name
@@ -176,5 +207,6 @@ public class AddressBook {
         if (isContactFound) {
             System.out.println("Sorry there is no contact with this First Name");
         }
+
     }
 }
